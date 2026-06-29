@@ -1,116 +1,597 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dark Hex Studios</title>
+
   <style>
+    :root {
+      --black: #030303;
+      --deep-black: #080808;
+      --panel: #0d0d0f;
+      --panel-soft: #141416;
+      --ruby: #9b111e;
+      --ruby-bright: #d21f3c;
+      --silver: #c7c7c7;
+      --muted: #8b8b8b;
+      --white: #f4f4f4;
+      --line: rgba(199, 199, 199, 0.16);
+      --glow: rgba(210, 31, 60, 0.28);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
-      background: #050505;
-      color: #f2f2f2;
-      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(155, 17, 30, 0.18), transparent 38%),
+        linear-gradient(180deg, #030303 0%, #070707 45%, #020202 100%);
+      color: var(--white);
+      font-family: Arial, Helvetica, sans-serif;
       line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.03) 48%, transparent 52%),
+        radial-gradient(circle at 20% 20%, rgba(210, 31, 60, 0.10), transparent 24%),
+        radial-gradient(circle at 80% 10%, rgba(199, 199, 199, 0.08), transparent 20%);
+      opacity: 0.65;
+      animation: atmosphere 9s ease-in-out infinite alternate;
+    }
+
+    @keyframes atmosphere {
+      from { opacity: 0.35; transform: translateY(0); }
+      to { opacity: 0.75; transform: translateY(-8px); }
+    }
+
+    @keyframes fadeRise {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulseRuby {
+      0%, 100% {
+        box-shadow: 0 0 22px rgba(210, 31, 60, 0.26);
+      }
+      50% {
+        box-shadow: 0 0 42px rgba(210, 31, 60, 0.46);
+      }
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      background: rgba(3, 3, 3, 0.76);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-brand {
+      color: var(--white);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.22rem;
+      font-size: 0.78rem;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .nav-links a {
+      color: var(--silver);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.12rem;
+      font-size: 0.72rem;
+      transition: color 0.25s ease, text-shadow 0.25s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--white);
+      text-shadow: 0 0 14px var(--glow);
     }
 
     header {
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: grid;
+      place-items: center;
+      padding: 7rem 1.5rem 4rem;
       text-align: center;
-      padding: 2rem;
+      position: relative;
+    }
+
+    .hero {
+      max-width: 950px;
+      animation: fadeRise 1.1s ease both;
+    }
+
+    .sigil-wrap {
+      width: 170px;
+      height: 170px;
+      margin: 0 auto 2rem;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(199, 199, 199, 0.2);
+      border-radius: 50%;
       background:
-        radial-gradient(circle at center, rgba(180, 0, 0, 0.35), transparent 45%),
-        linear-gradient(180deg, #0b0b0b, #000);
+        radial-gradient(circle, rgba(155, 17, 30, 0.16), transparent 70%),
+        rgba(0, 0, 0, 0.45);
+      animation: pulseRuby 5s ease-in-out infinite;
+    }
+
+    .sigil-img {
+      width: 132px;
+      height: 132px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 18px rgba(210, 31, 60, 0.38));
+    }
+
+    .sigil-fallback {
+      display: none;
+      width: 132px;
+      height: 132px;
+      place-items: center;
+      color: var(--ruby-bright);
+      font-size: 3rem;
+      border-radius: 50%;
+      border: 1px solid rgba(210, 31, 60, 0.4);
     }
 
     h1 {
-      font-size: 3rem;
-      letter-spacing: 4px;
+      margin: 0;
+      font-size: clamp(2.8rem, 9vw, 6.6rem);
+      line-height: 0.92;
       text-transform: uppercase;
-      margin-bottom: 1rem;
+      letter-spacing: 0.32rem;
+      text-shadow:
+        0 0 22px rgba(210, 31, 60, 0.28),
+        0 0 2px rgba(255, 255, 255, 0.9);
     }
 
     .tagline {
-      font-size: 1.2rem;
-      color: #c9c9c9;
       max-width: 700px;
-      margin: 0 auto;
+      margin: 1.5rem auto 0;
+      color: var(--silver);
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      letter-spacing: 0.08rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+      margin-top: 2.2rem;
+    }
+
+    .primary-button,
+    .placeholder-button {
+      border: 1px solid rgba(199, 199, 199, 0.28);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--white);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.16rem;
+      padding: 0.9rem 1.2rem;
+      font-size: 0.76rem;
+      cursor: default;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+
+    .primary-button {
+      cursor: pointer;
+      border-color: rgba(210, 31, 60, 0.72);
+      box-shadow: 0 0 18px rgba(210, 31, 60, 0.16);
+    }
+
+    .primary-button:hover,
+    .placeholder-button:hover {
+      transform: translateY(-2px);
+      border-color: var(--ruby-bright);
+      box-shadow: 0 0 24px rgba(210, 31, 60, 0.24);
+      background: rgba(155, 17, 30, 0.14);
+    }
+
+    .placeholder-button span {
+      display: block;
+      margin-top: 0.25rem;
+      color: var(--muted);
+      letter-spacing: 0.08rem;
+      font-size: 0.64rem;
+    }
+
+    main {
+      position: relative;
+      z-index: 2;
     }
 
     section {
-      padding: 4rem 2rem;
-      max-width: 900px;
-      margin: auto;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 5rem 1.5rem;
+    }
+
+    .section-kicker {
+      color: var(--ruby-bright);
+      text-transform: uppercase;
+      letter-spacing: 0.20rem;
+      font-size: 0.76rem;
+      margin-bottom: 0.65rem;
     }
 
     h2 {
-      color: #ff2a2a;
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 3.7rem);
+      line-height: 1;
       text-transform: uppercase;
-      letter-spacing: 2px;
+      letter-spacing: 0.18rem;
     }
 
-    .card {
-      border: 1px solid #333;
+    .section-intro {
+      max-width: 760px;
+      margin-top: 1rem;
+      color: var(--silver);
+      font-size: 1.02rem;
+    }
+
+    .archive-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 2.3rem;
+    }
+
+    .archive-card {
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       padding: 1.5rem;
-      margin: 1rem 0;
-      background: #0d0d0d;
-      box-shadow: 0 0 20px rgba(255, 0, 0, 0.08);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.055), rgba(255,255,255,0.015)),
+        var(--panel);
+      border: 1px solid var(--line);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .archive-card::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      background: linear-gradient(135deg, rgba(210,31,60,0.28), transparent 38%, rgba(199,199,199,0.10));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .archive-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(210, 31, 60, 0.48);
+      box-shadow: 0 0 30px rgba(210, 31, 60, 0.12);
+    }
+
+    .archive-card:hover::before {
+      opacity: 1;
+    }
+
+    .archive-card h3,
+    .archive-card p,
+    .badge {
+      position: relative;
+      z-index: 1;
+    }
+
+    .archive-card h3 {
+      margin: 0 0 1rem;
+      font-size: 1.35rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15rem;
+    }
+
+    .archive-card p {
+      color: var(--silver);
+      margin: 0;
+    }
+
+    .badge {
+      width: fit-content;
+      margin-top: 1.5rem;
+      padding: 0.4rem 0.6rem;
+      border: 1px solid rgba(210, 31, 60, 0.48);
+      color: var(--silver);
+      text-transform: uppercase;
+      letter-spacing: 0.12rem;
+      font-size: 0.62rem;
+      background: rgba(155, 17, 30, 0.08);
+    }
+
+    .vault-preview {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 2.3rem;
+    }
+
+    .preview-tile {
+      min-height: 220px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 1.5rem;
+      background:
+        radial-gradient(circle at center, rgba(210, 31, 60, 0.12), transparent 52%),
+        linear-gradient(145deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012));
+      border: 1px solid var(--line);
+      color: var(--silver);
+    }
+
+    .preview-tile strong {
+      display: block;
+      color: var(--white);
+      text-transform: uppercase;
+      letter-spacing: 0.16rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .manifesto-panel,
+    .contact-panel {
+      padding: 2rem;
+      background:
+        linear-gradient(145deg, rgba(210,31,60,0.12), transparent 50%),
+        rgba(13, 13, 15, 0.88);
+      border: 1px solid rgba(199, 199, 199, 0.18);
+      box-shadow: 0 0 32px rgba(0, 0, 0, 0.35);
+    }
+
+    .manifesto-panel p,
+    .contact-panel p {
+      max-width: 850px;
+      margin: 0;
+      color: var(--silver);
+      font-size: clamp(1.05rem, 2.2vw, 1.35rem);
     }
 
     footer {
+      position: relative;
+      z-index: 2;
       text-align: center;
-      padding: 2rem;
-      color: #777;
-      border-top: 1px solid #222;
+      padding: 2rem 1rem;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      background: rgba(0, 0, 0, 0.52);
+      text-transform: uppercase;
+      letter-spacing: 0.14rem;
+      font-size: 0.75rem;
+    }
+
+    @media (max-width: 850px) {
+      nav {
+        align-items: flex-start;
+        gap: 0.8rem;
+        flex-direction: column;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .archive-grid,
+      .vault-preview {
+        grid-template-columns: 1fr;
+      }
+
+      .sigil-wrap {
+        width: 145px;
+        height: 145px;
+      }
+
+      .sigil-img,
+      .sigil-fallback {
+        width: 112px;
+        height: 112px;
+      }
     }
   </style>
+
 </head>
+
 <body>
+  <nav>
+    <a class="nav-brand" href="#">Dark Hex Studios</a>
+    <div class="nav-links">
+      <a href="#archive">Archive</a>
+      <a href="#manifesto">Manifesto</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
 
   <header>
-    <div>
-      <h1>Dark Hex Studios</h1>
-      <p class="tagline">
-        Photography. AI visuals. Occult street art. Music lore. A creative archive built in shadow, fire, and intention.
-      </p>
-    </div>
+    <div class="hero">
+      <div class="sigil-wrap">
+        <img
+          src="darkhex-sigil.webp"
+          alt="Dark Hex Studios sigil"
+          class="sigil-img"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';"
+        />
+        <div class="sigil-fallback">✦</div>
+      </div>
+
+```
+  <h1>Dark Hex Studios</h1>
+  <p class="tagline">A creative house for shadow, signal, and design.</p>
+
+  <div class="hero-actions">
+    <a href="#archive" class="primary-button">Enter the Hex</a>
+    <button class="placeholder-button" type="button">
+      Visual Archive
+      <span>Coming Soon</span>
+    </button>
+    <button class="placeholder-button" type="button">
+      Sound
+      <span>Coming Soon</span>
+    </button>
+    <button class="placeholder-button" type="button">
+      Lore
+      <span>Coming Soon</span>
+    </button>
+  </div>
+</div>
+```
+
   </header>
 
-  <section>
-    <h2>About</h2>
-    <div class="card">
-      <p>
-        Dark Hex Studios is a creative universe for raw visuals, dark storytelling, photography, experimental AI art, and underground myth.
+  <main>
+    <section id="archive">
+      <div class="section-kicker">Living Archive</div>
+      <h2>The Chambers</h2>
+      <p class="section-intro">
+        A collection of creative visions, visual language, sound, myth, clothing, and design.
+        The doors open one chamber at a time.
       </p>
+
+```
+  <div class="archive-grid">
+    <article class="archive-card">
+      <div>
+        <h3>The Lens</h3>
+        <p>Where shadow catches light and the ordinary learns to haunt.</p>
+      </div>
+      <div class="badge">Forging in the Hex</div>
+    </article>
+
+    <article class="archive-card">
+      <div>
+        <h3>The Signal</h3>
+        <p>Fragments from the machine: skulls, sigils, visions, and things that should not blink back.</p>
+      </div>
+      <div class="badge">Forging in the Hex</div>
+    </article>
+
+    <article class="archive-card">
+      <div>
+        <h3>The Frequency</h3>
+        <p>Sound before it has a body. Rhythm, ritual, distortion, and the pulse under the floor.</p>
+      </div>
+      <div class="badge">Forging in the Hex</div>
+    </article>
+
+    <article class="archive-card">
+      <div>
+        <h3>The Myth</h3>
+        <p>Red moons, cursed relics, hidden names, and stories that keep bleeding through the walls.</p>
+      </div>
+      <div class="badge">Forging in the Hex</div>
+    </article>
+
+    <article class="archive-card">
+      <div>
+        <h3>The Thread</h3>
+        <p>Symbols made wearable. Cloth, pressure, identity, and the armor of the unbroken.</p>
+      </div>
+      <div class="badge">Forging in the Hex</div>
+    </article>
+
+    <article class="archive-card">
+      <div>
+        <h3>The Oath</h3>
+        <p>10Down. Loyalty under pressure. The mark that stays when everything else folds. 10 down till the coffin hits the ground.</p>
+      </div>
+      <div class="badge">Forging in the Hex</div>
+    </article>
+  </div>
+</section>
+
+<section>
+  <div class="section-kicker">Vault Preview</div>
+  <h2>Coming Soon</h2>
+  <p class="section-intro">
+    The first releases are still being shaped. Visual drops, sound experiments, lore fragments, and clothing concepts will surface here.
+  </p>
+
+  <div class="vault-preview">
+    <div class="preview-tile">
+      <div>
+        <strong>Visual Archive</strong>
+        Image gallery opening soon.
+      </div>
     </div>
 
-    <h2>Projects</h2>
-    <div class="card">
-      <h3>Photography</h3>
-      <p>Industrial nights, graffiti, trains, woods, shadows, portraits, and street-lit memory.</p>
+    <div class="preview-tile">
+      <div>
+        <strong>Sound Chamber</strong>
+        Audio concepts opening soon.
+      </div>
     </div>
 
-    <div class="card">
-      <h3>AI Visuals</h3>
-      <p>Skulls, sigils, demons, watch wallpapers, tattoo concepts, and dark cinematic experiments.</p>
+    <div class="preview-tile">
+      <div>
+        <strong>Clothing Concepts</strong>
+        Wearable designs opening soon.
+      </div>
     </div>
+  </div>
+</section>
 
-    <div class="card">
-      <h3>Santos / La Roja Lore</h3>
-      <p>A haunted creative mythology of red moons, cursed instruments, hidden objects, and prophecy.</p>
-    </div>
+<section id="manifesto">
+  <div class="section-kicker">Manifesto</div>
+  <h2>The Intent</h2>
+  <div class="manifesto-panel">
+    <p>
+      Dark Hex Studios exists as a living archive for creative visions, visual language, sound, myth, clothing, and design.
+      Nothing here is static. Everything is being sharpened in the Hex.
+    </p>
+  </div>
+</section>
 
-    <div class="card">
-      <h3>10Down</h3>
-      <p>10 down always. 10 down till the coffin hits the ground.</p>
-    </div>
-  </section>
+<section id="contact">
+  <div class="section-kicker">Contact</div>
+  <h2>The Signal</h2>
+  <div class="contact-panel">
+    <p>
+      Contact, collaborations, and social links will open soon. For now, the archive is being forged.
+    </p>
+  </div>
+</section>
+```
+
+  </main>
 
   <footer>
-    <p>© Dark Hex Studios</p>
+    © Dark Hex Studios 2026
   </footer>
-
 </body>
 </html>
